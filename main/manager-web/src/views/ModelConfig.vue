@@ -29,7 +29,6 @@
           :default-active="activeTab"
           class="nav-panel"
           @select="handleMenuSelect"
-          style="background-size: cover; background-position: center"
         >
           <el-menu-item index="vad">
             <span class="menu-text">{{ $t("modelConfig.vad") }}</span>
@@ -614,13 +613,7 @@ export default {
   min-width: 242px;
   height: 100%;
   border-right: 1px solid #ebeef5;
-  background: linear-gradient(
-      120deg,
-      rgba(107, 140, 255, 0.3) 0%,
-      rgba(169, 102, 255, 0.3) 25%,
-      transparent 60%
-    ),
-    url("../assets/model/model.png") no-repeat center / cover;
+  background: #f8fafc;
   padding: 16px 0;
   flex-shrink: 0;
   display: flex;
@@ -841,13 +834,6 @@ export default {
   color: #fff !important;
 }
 
-
-.el-button img {
-  height: 1em;
-  vertical-align: middle;
-  padding-right: 2px;
-  padding-bottom: 2px;
-}
 
 ::v-deep .el-checkbox__inner {
   border-color: #cfcfcf !important;
