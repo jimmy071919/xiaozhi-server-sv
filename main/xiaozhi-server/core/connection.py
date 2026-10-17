@@ -52,6 +52,16 @@ TAG = __name__
 auto_import_modules("plugins_func.functions")
 
 
+LOCATION_QUERY_TERMS = (
+    "天氣", "天气", "氣溫", "气温", "會下雨", "会下雨", "降雨",
+    "附近", "周邊", "周边", "最近的", "我在哪", "目前位置", "定位",
+)
+
+
+def needs_device_location(query):
+    return bool(query) and any(term in query for term in LOCATION_QUERY_TERMS)
+
+
 class TTSException(RuntimeError):
     pass
 
@@ -1052,6 +1062,36 @@ class ConnectionHandler:
         # 更新系统prompt至上下文
         self.dialogue.update_system_message(self.prompt)
 
+    def _add_device_location_context(self, query):
+        """位置相關問題先向裝置取定位，避免 LLM 反問使用者。"""
+        if not needs_device_location(query):
+            return query
+        handler = getattr(self, "func_handler", None)
+        loop = self.loop
+        if handler is None or loop is None or not handler.has_tool("self_location_get"):
+            return query
+
+        try:
+            future = asyncio.run_coroutine_threadsafe(
+                handler.handle_llm_function_call(
+                    self,
+                    {"name": "self_location_get", "arguments": {}},
+                ),
+                loop,
+            )
+            result = future.result(timeout=10)
+            location = (result.result or result.response) if result else None
+            if location:
+                self.logger.bind(tag=TAG).info("位置相關問題已自動取得裝置定位")
+                return (
+                    f"[裝置定位資料：{location}]\n"
+                    "請直接使用上述位置回答，不要反問使用者所在縣市。\n"
+                    f"使用者問題：{query}"
+                )
+        except Exception as e:
+            self.logger.bind(tag=TAG).warning(f"自動取得裝置定位失敗: {e}")
+        return query
+
     def chat(self, query, depth=0):
         # 保存当前任务的sentence_id到局部变量，避免被新任务覆盖
         current_sentence_id = None
@@ -1063,6 +1103,7 @@ class ConnectionHandler:
         if depth == 0:
             current_sentence_id = str(uuid.uuid4().hex)
             self.sentence_id = current_sentence_id  # 更新共享属性
+            query = self._add_device_location_context(query)
             self.dialogue.put(Message(role="user", content=query))
             self.tts.tts_text_queue.put(
                 TTSMessageDTO(

@@ -27,6 +27,8 @@ services:
       - ./models/SenseVoiceSmall/model.pt:/opt/xiaozhi-esp32-server/models/SenseVoiceSmall/model.pt
       # 覆盖上游内建提示词，避免强制虚构国籍或政治身份
       - ./agent-base-prompt.txt:/opt/xiaozhi-esp32-server/agent-base-prompt.txt:ro
+      # 套用本地連線邏輯修正：位置相關問題先查裝置定位
+      - ./core/connection.py:/opt/xiaozhi-esp32-server/core/connection.py:ro
 
   # manager-api和manager-web模块
   xiaozhi-esp32-server-web:
