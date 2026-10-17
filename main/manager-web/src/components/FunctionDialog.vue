@@ -75,7 +75,7 @@
               <template #label>
                 <span style="font-size: 16px; margin-right: 6px;">{{ field.label }}</span>
                 <el-tooltip effect="dark" :content="fieldRemark(field)" placement="top">
-                  <img src="@/assets/home/info.png" alt="" class="info-icon">
+                  <i class="el-icon-info info-icon"></i>
                 </el-tooltip>
               </template>
               <!-- ARRAY -->

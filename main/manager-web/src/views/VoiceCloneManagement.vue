@@ -16,7 +16,7 @@
             <div v-loading="loading" class="voice-clone-grid">
               <div v-for="item in voiceCloneList" :key="item.id" class="voice-clone-card">
                 <div class="card-top">
-                  <img src="@/assets/setting/voiceclone.png" alt="" width="80px" height="80px">
+                  <div class="voice-mark" aria-hidden="true"><i class="el-icon-microphone"></i></div>
                   <div class="card-info">
                     <div class="info-left">
                       <div class="info-title">
@@ -508,6 +508,19 @@ export default {
 .card-top {
   display: flex;
   gap: 12px;
+}
+
+.voice-mark {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  color: #2563eb;
+  font-size: 25px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
 }
 
 .voice-wave {

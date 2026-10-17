@@ -13,7 +13,7 @@
               <div class="config-header">
               <!-- 使用角色配置页面相同的彩色图标效果 -->
               <div class="header-icon">
-                <img loading="lazy" src="@/assets/home/setting-user.png" alt="">
+                <i class="el-icon-setting"></i>
               </div>
               <span class="header-title">{{ form.agentName }}</span>
               <div class="header-actions">

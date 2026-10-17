@@ -7,11 +7,12 @@
       </div>
     </el-tooltip>
       <div>
-        <img src="@/assets/home/delete.png" alt="" style="width: 18px;height: 18px;margin-right: 10px;"
-          @click.stop="handleDelete" />
+        <button class="icon-action icon-action--danger" type="button" aria-label="刪除" @click.stop="handleDelete">
+          <i class="el-icon-delete"></i>
+        </button>
         <el-tooltip class="item" effect="light" :content="device.systemPrompt" placement="top"
           popper-class="device-item-tooltip"> 
-          <img src="@/assets/home/info.png" alt="" style="width: 18px;height: 18px;" />
+          <button class="icon-action" type="button" aria-label="資訊"><i class="el-icon-info"></i></button>
         </el-tooltip>
       </div>
     </div>
@@ -134,6 +135,21 @@ export default {
     overflow: hidden;
   }
 }
+
+.icon-action {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: #6b7280;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+
+.icon-action:hover { color: #2563eb; background: #eff6ff; }
+.icon-action--danger:hover { color: #dc2626; background: #fef2f2; }
 
 .device-name {
   margin: 7px 0 10px;

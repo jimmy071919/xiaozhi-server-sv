@@ -13,7 +13,7 @@
             <div class="config-header">
               <div class="header-left">
                 <div class="header-icon">
-                  <img loading="lazy" src="@/assets/home/setting-user.png" alt="" />
+                  <i class="el-icon-setting"></i>
                 </div>
                 <span class="header-title">{{ form.agentName }}</span>
                 <span v-if="currentVersionNo" class="current-version-tag">
@@ -45,7 +45,7 @@
               </div>
               <div class="header-actions">
                 <div class="hint-text">
-                  <img loading="lazy" src="@/assets/home/info.png" alt="" />
+                  <i class="el-icon-info"></i>
                   <span>{{ $t("roleConfig.restartNotice") }}</span>
                 </div>
                 <el-button class="history-btn" @click="showSnapshotDialog = true">

@@ -26,7 +26,7 @@
               <!-- 功能管理分组 -->
               <div v-if="featureManagementFeatures.length > 0" class="feature-group">
                 <div class="group-title">
-                  <img src="@/assets/setting/menu.png" alt="" width="28" height="28">
+                  <i class="el-icon-menu group-symbol"></i>
                   <div class="group-header">
                     <span class="group-name">{{ $t('featureManagement.groupName.featureManagement') }}</span>
                     <span class="module-count">{{ $t('featureManagement.moduleCount', { count: featureManagementFeatures.length }) }}</span>
@@ -41,7 +41,7 @@
                     :class="{ 'feature-enabled': feature.enabled, 'feature-disabled': isSaving }"
                     @click="!isSaving && toggleFeature(feature)"
                   >
-                    <img :src="featureIcons[feature.id]" alt="" width="60" height="60">
+                    <div class="feature-symbol" aria-hidden="true">{{ featureSymbol(feature.id) }}</div>
                     <div class="feature-content">
                       <div class="feature-header">
                         <h3 class="feature-name">{{ $t(`feature.${feature.id}.name`) }}</h3>
@@ -63,7 +63,7 @@
               <!-- 语音管理分组 -->
               <div v-if="voiceManagementFeatures.length > 0" class="feature-group">
                 <div class="group-title">
-                  <img src="@/assets/setting/agent.png" alt="" width="28" height="28">
+                  <i class="el-icon-microphone group-symbol"></i>
                   <div class="group-header">
                     <span class="group-name">{{ $t('featureManagement.groupName.voiceManagement') }}</span>
                     <span class="module-count">{{ $t('featureManagement.moduleCount', { count: voiceManagementFeatures.length }) }}</span>
@@ -78,7 +78,7 @@
                     :class="{ 'feature-enabled': feature.enabled, 'feature-disabled': isSaving }"
                     @click="!isSaving && toggleFeature(feature)"
                   >
-                    <img :src="voiceManagementIcons[feature.id]" alt="" width="60" height="60">
+                    <div class="feature-symbol" aria-hidden="true">{{ featureSymbol(feature.id) }}</div>
                     <div class="feature-content">
                       <div class="feature-header">
                         <h3 class="feature-name">{{ $t(`feature.${feature.id}.name`) }}</h3>
@@ -120,13 +120,6 @@ import VersionFooter from "@/components/VersionFooter.vue";
 import featureManager from "@/utils/featureManager.js";
 import CustomButton from "@/components/CustomButton.vue";
 
-import voiceprintIcon from '@/assets/setting/voiceprint.png'
-import voiceCloneIcon from '@/assets/setting/voiceclone.png'
-import knowledgeBaseIcon from '@/assets/setting/knowledgeBase.png'
-import mcpAccessPointIcon from '@/assets/setting/mcpAccessPoint.png'
-import addressBookIcon from '@/assets/setting/addressBook.png'
-import vadIcon from '@/assets/setting/vad.png'
-import asrIcon from '@/assets/setting/asr.png'
 
 export default {
   name: "FeatureManagement",
@@ -141,18 +134,7 @@ export default {
       featureManagementFeatures: [],
       voiceManagementFeatures: [],
       isSaving: false, // 添加保存状态锁定
-      // 功能模块图标映射
-      featureIcons: {
-        'voiceprintRecognition': voiceprintIcon,
-        'voiceClone': voiceCloneIcon,
-        'knowledgeBase': knowledgeBaseIcon,
-        'mcpAccessPoint': mcpAccessPointIcon,
-        'addressBook': addressBookIcon,
-      },
-      voiceManagementIcons: {
-        'vad': vadIcon,
-        'asr': asrIcon,
-      },
+
     }
   },
   computed: {
@@ -185,6 +167,13 @@ export default {
   },
   
   methods: {
+    featureSymbol(id) {
+      const symbols = {
+        voiceprintRecognition: '聲', voiceClone: '音', knowledgeBase: '知',
+        mcpAccessPoint: '連', addressBook: '聯', vad: '檢', asr: '辨'
+      };
+      return symbols[id] || '設';
+    },
     // 根据ID列表获取功能
     async getFeaturesByIds(featureIds) {
       try {
@@ -505,6 +494,25 @@ export default {
 .feature-content {
   width: 100%;
   margin-left: 16px;
+}
+
+.feature-symbol {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  color: #2563eb;
+  font-size: 15px;
+  font-weight: 700;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+}
+
+.group-symbol {
+  color: #2563eb;
+  font-size: 20px;
 }
 
 .feature-header {

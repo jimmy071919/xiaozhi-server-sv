@@ -22,7 +22,7 @@
     <div class="doc-grid" v-loading="docLoading" :element-loading-text="$t('knowledgeBaseManagement.loading')">
       <div v-for="doc in documents" :key="doc.id" class="doc-card">
         <div class="doc-card-top">
-          <img class="doc-file-icon" :src="getFileIconSrc(doc.name)" />
+          <div class="doc-file-mark">{{ getFileExtension(doc.name) }}</div>
           <div class="doc-card-info">
             <div class="doc-card-name" :title="doc.name">{{ doc.name }}</div>
             <div class="doc-card-meta">{{ $t('knowledgeFileUpload.uploadTime') }} {{ formatDate(doc.createdAt) }}</div>
@@ -88,17 +88,6 @@ import Api from "@/apis/api";
 import CustomButton from "@/components/CustomButton.vue";
 import CustomPagination from "@/components/CustomPagination.vue";
 
-const iconMap = {
-  pdf: require('@/assets/knowledge-base/pdf.png'),
-  doc: require('@/assets/knowledge-base/docX.png'),
-  docx: require('@/assets/knowledge-base/docX.png'),
-  xls: require('@/assets/knowledge-base/xlsx.png'),
-  xlsx: require('@/assets/knowledge-base/xlsx.png'),
-  csv: require('@/assets/knowledge-base/xlsx.png'),
-  md: require('@/assets/knowledge-base/MD.png'),
-  markdown: require('@/assets/knowledge-base/MD.png'),
-  txt: require('@/assets/knowledge-base/txt.png'),
-};
 
 export default {
   name: 'LibraryItem',
@@ -313,10 +302,9 @@ export default {
       );
     },
 
-    getFileIconSrc(fileName) {
-      if (!fileName) return require('@/assets/knowledge-base/default.png');
-      const ext = fileName.split('.').pop().toLowerCase();
-      return iconMap[ext] || require('@/assets/knowledge-base/default.png');
+    getFileExtension(fileName) {
+      if (!fileName || !fileName.includes('.')) return '檔';
+      return fileName.split('.').pop().slice(0, 4).toUpperCase();
     },
 
     getProgressClass(doc) {
@@ -462,12 +450,18 @@ export default {
   margin-bottom: 12px;
 }
 
-.doc-file-icon {
+.doc-file-mark {
+  display: grid;
+  place-items: center;
   width: 46px;
   height: 46px;
   border-radius: 10px;
-  object-fit: contain;
   flex-shrink: 0;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 700;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
 }
 
 .doc-card-info {

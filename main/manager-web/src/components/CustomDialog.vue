@@ -15,7 +15,6 @@
     <template slot="title">
       <slot name="title">
         <div class="dialog-title">
-          <img src="@/assets/knowledge-base/level.png" class="title-icon" />
           <span>{{ title }}</span>
         </div>
       </slot>
@@ -26,7 +25,6 @@
         <CustomButton @click="handleCancel">{{ cancelText }}</CustomButton>
         <CustomButton :loading="confirmLoading" type="confirm" @click="handleConfirm">
           <span class="confirm-inner">
-            <img src="@/assets/knowledge-base/star.png" class="confirm-icon" />
             {{ confirmText }}
           </span>
         </CustomButton>
@@ -158,7 +156,8 @@ export default {
 /* .v-modal 样式由 global.scss 全局定义 */
 ::v-deep .el-dialog__header {
   padding: 16px 20px 12px;
-  background: linear-gradient(135deg, #e2eeff, #edeafe);
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
   text-align: left;
 }
 

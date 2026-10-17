@@ -19,7 +19,7 @@
             <div class="session-list" @scroll="handleScroll">
                 <div v-for="session in sessions" :key="session.sessionId" class="session-item"
                     :class="{ active: currentSessionId === session.sessionId }" @click="selectSession(session)">
-                    <img :src="getUserAvatar(session.sessionId)" class="avatar" />
+                    <span class="avatar avatar--session">聊</span>
                     <div class="session-info">
                         <div class="session-time">{{ session.title || formatTime(session.createdAt) }}</div>
                         <div class="message-count">{{ session.chatCount > 99 ? '99' : session.chatCount }}</div>
@@ -35,8 +35,9 @@
                             {{ message.content }}
                         </div>
                         <div v-else class="message-item" :class="{ 'user-message': message.chatType === 1, 'tool-message': message.chatType === 3 }">
-                            <img :src="message.chatType === 1 ? getUserAvatar(currentSessionId) : require('@/assets/xiaozhi-logo.png')"
-                                class="avatar" />
+                            <span class="avatar" :class="message.chatType === 1 ? 'avatar--user' : 'avatar--assistant'">
+                                {{ message.chatType === 1 ? '你' : 'AI' }}
+                            </span>
                             <div class="message-content">
                                 <template v-if="Array.isArray(extractContentFromString(message.content))">
                                     <div class="content-wrapper">
@@ -369,20 +370,6 @@ export default {
                 }
             });
         }, 300),
-        getUserAvatar(sessionId) {
-            // 从 sessionId 中提取所有数字
-            const numbers = sessionId.match(/\d+/g);
-            if (!numbers) return require('@/assets/user-avatar1.png');
-
-            // 将所有数字相加
-            const sum = numbers.reduce((acc, num) => acc + parseInt(num), 0);
-
-            // 计算模5并加1，得到1-5之间的数字
-            const avatarIndex = (sum % 5) + 1;
-
-            // 返回对应的头像图片
-            return require(`@/assets/user-avatar${avatarIndex}.png`);
-        },
 
         // 下载本会话聊天记录
         downloadCurrentSession() {
@@ -443,11 +430,22 @@ export default {
 }
 
 .avatar {
+    display: grid;
+    place-items: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    flex: 0 0 40px;
+    color: #1d4ed8;
+    font-size: 12px;
+    font-weight: 700;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
 }
+
+.avatar--user { color: #374151; background: #f3f4f6; border-color: #e5e7eb; }
+.avatar--assistant { color: #fff; background: #2563eb; border-color: #2563eb; }
 
 .session-info {
     width: calc(100% - 50px);

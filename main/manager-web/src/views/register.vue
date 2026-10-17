@@ -1,21 +1,18 @@
 <template>
   <div class="welcome" @keyup.enter="register">
     <el-container style="height: 100%;">
-      <!-- 保持相同的头部 -->
-      <el-header>
-        <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
-          <img loading="lazy" alt="" :src="xiaozhiAiIcon" style="height: 18px;" />
-        </div>
+      <el-header class="auth-header">
+        <div class="auth-brand"><span class="auth-brand-mark">X</span><span>小智控制台</span></div>
       </el-header>
-      <div class="login-person">
-        <img loading="lazy" alt="" src="@/assets/login/register-person.png" style="width: 100%;" />
-      </div>
+      <section class="auth-intro" aria-label="帳號註冊">
+        <span class="auth-eyebrow">CREATE ACCOUNT</span>
+        <h1>建立帳號，<br>開始管理助理。</h1>
+        <p>簡單、安全，不需要多餘步驟。</p>
+      </section>
       <el-main style="position: relative;">
         <div class="login-box">
           <!-- 修改标题部分 -->
           <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
-            <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
             <div class="login-text">{{ $t('register.title') }}</div>
             <div class="login-welcome">
               {{ $t('register.welcome') }}
@@ -26,7 +23,7 @@
             <form @submit.prevent="register">
               <!-- 用户名/手机号输入框 -->
               <div class="input-box" v-if="!enableMobileRegister">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/username.png" />
+                <i class="el-icon-user input-symbol"></i>
                 <el-input v-model="form.username" :placeholder="$t('register.usernamePlaceholder')" />
               </div>
 
@@ -44,7 +41,7 @@
 
                 <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                   <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
-                    <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
+                    <i class="el-icon-circle-check input-symbol"></i>
                     <el-input v-model="form.captcha" :placeholder="$t('register.captchaPlaceholder')"
                       style="flex: 1;" />
                   </div>
@@ -56,7 +53,7 @@
 
                 <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                   <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
-                    <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
+                    <i class="el-icon-mobile-phone input-symbol"></i>
                     <el-input v-model="form.mobileCaptcha" :placeholder="$t('register.mobileCaptchaPlaceholder')"
                       style="flex: 1;" maxlength="6" />
                   </div>
@@ -71,14 +68,14 @@
 
               <!-- 密码输入框 -->
               <div class="input-box">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
+                <i class="el-icon-lock input-symbol"></i>
                 <el-input v-model="form.password" :placeholder="$t('register.passwordPlaceholder')" type="password"
                   show-password />
               </div>
 
               <!-- 新增确认密码 -->
               <div class="input-box">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
+                <i class="el-icon-lock input-symbol"></i>
                 <el-input v-model="form.confirmPassword" :placeholder="$t('register.confirmPasswordPlaceholder')"
                   type="password" show-password />
               </div>
@@ -87,7 +84,7 @@
               <div v-if="!enableMobileRegister"
                 style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
-                  <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
+                  <i class="el-icon-circle-check input-symbol"></i>
                   <el-input v-model="form.captcha" :placeholder="$t('register.captchaPlaceholder')" style="flex: 1;" />
                 </div>
                 <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
@@ -127,7 +124,7 @@ import Api from '@/apis/api';
 import VersionFooter from '@/components/VersionFooter.vue';
 import { getUUID, goToPage, showDanger, showSuccess, sm2Encrypt, validateMobile } from '@/utils';
 import { mapState } from 'vuex';
-import i18n from '@/i18n';
+
 
 // 导入语言切换功能
 
@@ -143,28 +140,7 @@ export default {
       mobileAreaList: state => state.pubConfig.mobileAreaList,
       sm2PublicKey: state => state.pubConfig.sm2PublicKey,
     }),
-    // 获取当前语言
-    currentLanguage() {
-      return i18n.locale || "zh_CN";
-    },
-    // 根据当前语言获取对应的xiaozhi-ai图标
-    xiaozhiAiIcon() {
-      const currentLang = this.currentLanguage;
-      switch (currentLang) {
-        case "zh_CN":
-          return require("@/assets/xiaozhi-ai.png");
-        case "zh_TW":
-          return require("@/assets/xiaozhi-ai_zh_TW.png");
-        case "en":
-          return require("@/assets/xiaozhi-ai_en.png");
-        case "de":
-          return require("@/assets/xiaozhi-ai_de.png");
-        case "vi":
-          return require("@/assets/xiaozhi-ai_vi.png");
-        default:
-          return require("@/assets/xiaozhi-ai.png");
-      }
-    },
+
     canSendMobileCaptcha() {
       return this.countdown === 0 && validateMobile(this.form.mobile, this.form.areaCode);
     }
@@ -177,7 +153,7 @@ export default {
         confirmPassword: '',
         captcha: '',
         captchaId: '',
-        areaCode: '+86',
+        areaCode: '+886',
         mobile: '',
         mobileCaptcha: ''
       },
@@ -199,7 +175,7 @@ export default {
   },
   methods: {
     openPage(url) {
-      const lang = this.$i18n ? this.$i18n.locale : 'zh_CN';
+      const lang = this.$i18n ? this.$i18n.locale : 'zh_TW';
       if (!lang.startsWith('zh')) {
         url = url.replace('.html', '-en.html');
       }

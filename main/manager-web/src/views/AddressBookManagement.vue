@@ -38,7 +38,7 @@
                 @click="handleDeviceClick(device, agent)"
               >
                 <div class="device-avatar">
-                  <img :src="getDeviceAvatar(device.id)" alt="avatar" />
+                  <span>{{ deviceInitial(device) }}</span>
                 </div>
                 <div class="device-content">
                   <div class="device-name">
@@ -66,7 +66,7 @@
           <div class="device-header">
             <div class="device-left">
               <div class="device-avatar-large">
-                <img :src="getDeviceAvatar(selectedDevice.id)" alt="avatar" />
+                <span>{{ deviceInitial(selectedDevice) }}</span>
               </div>
               <div class="device-info">
                 <div class="device-name-row">
@@ -161,7 +161,7 @@
                   @change="(checked) => handlePermissionToggle(device.deviceId, checked)"
                 ></el-checkbox>
                 <div class="permission-avatar">
-                  <img :src="getDeviceAvatar(device.id)" alt="avatar" />
+                  <span>{{ deviceInitial(device) }}</span>
                 </div>
                 <div class="permission-content">
                   <div class="permission-name-row">
@@ -585,34 +585,8 @@ export default {
       if (!device) return '-';
       return formatCreateDate(device.createDateTimestamp, device.createDate);
     },
-    getDeviceAvatar(deviceId) {
-      // 根据 deviceId 计算 MD5，选择对应的头像
-      const avatars = [
-        require('@/assets/device-avatars/xiaozhi-logo1.png'),
-        require('@/assets/device-avatars/xiaozhi-logo2.png'),
-        require('@/assets/device-avatars/xiaozhi-logo3.png'),
-        require('@/assets/device-avatars/xiaozhi-logo4.png'),
-        require('@/assets/device-avatars/xiaozhi-logo5.png'),
-        require('@/assets/device-avatars/xiaozhi-logo6.png'),
-        require('@/assets/device-avatars/xiaozhi-logo7.png'),
-        require('@/assets/device-avatars/xiaozhi-logo8.png'),
-        require('@/assets/device-avatars/xiaozhi-logo9.png'),
-        require('@/assets/device-avatars/xiaozhi-logo10.png'),
-        require('@/assets/device-avatars/xiaozhi-logo11.png'),
-        require('@/assets/device-avatars/xiaozhi-logo12.png'),
-        require('@/assets/device-avatars/xiaozhi-logo13.png'),
-        require('@/assets/device-avatars/xiaozhi-logo14.png'),
-        require('@/assets/device-avatars/xiaozhi-logo15.png'),
-        require('@/assets/device-avatars/xiaozhi-logo16.png')
-      ];
-      // 简单的哈希算法，根据 deviceId 分配头像
-      let hash = 0;
-      for (let i = 0; i < deviceId.length; i++) {
-        hash = ((hash << 5) - hash) + deviceId.charCodeAt(i);
-        hash = hash & hash;
-      }
-      const index = Math.abs(hash) % avatars.length;
-      return avatars[index];
+    deviceInitial(device) {
+      return String(device?.name || '裝').trim().slice(0, 1).toUpperCase();
     }
   },
 };
@@ -681,11 +655,18 @@ export default {
       }
 
       .device-avatar {
+        display: grid;
+        place-items: center;
         width: 40px;
         height: 40px;
         border-radius: 50%;
         overflow: hidden;
         flex-shrink: 0;
+        color: #2563eb;
+        font-size: 13px;
+        font-weight: 700;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
 
         img {
           width: 100%;
@@ -779,11 +760,18 @@ export default {
 }
 
 .device-avatar-large {
+  display: grid;
+  place-items: center;
   width: 80px;
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  color: #2563eb;
+  font-size: 22px;
+  font-weight: 700;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
 
   img {
     width: 100%;
@@ -1049,11 +1037,18 @@ export default {
   }
 
   .permission-avatar {
+    display: grid;
+    place-items: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 700;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
 
     img {
       width: 100%;

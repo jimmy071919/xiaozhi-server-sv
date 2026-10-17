@@ -1,22 +1,19 @@
 <template>
   <div class="welcome" @keyup.enter="retrievePassword">
     <el-container style="height: 100%;">
-      <!-- 保持相同的头部 -->
-      <el-header>
-        <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
-          <img loading="lazy" alt="" :src="xiaozhiAiIcon" style="height: 18px;" />
-        </div>
+      <el-header class="auth-header">
+        <div class="auth-brand"><span class="auth-brand-mark">X</span><span>小智控制台</span></div>
       </el-header>
-      <div class="login-person">
-        <img loading="lazy" alt="" src="@/assets/login/register-person.png" style="width: 100%;" />
-      </div>
+      <section class="auth-intro" aria-label="重設密碼">
+        <span class="auth-eyebrow">ACCOUNT RECOVERY</span>
+        <h1>重新取得，<br>你的帳號。</h1>
+        <p>完成驗證後即可設定新密碼。</p>
+      </section>
       <el-main style="position: relative;">
         <form @submit.prevent="retrievePassword">
           <div class="login-box">
             <!-- 修改标题部分 -->
             <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
-              <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
               <div class="login-text">{{ $t('retrievePassword.title') }}</div>
               <div class="login-welcome">
                 {{ $t('retrievePassword.subtitle') }}
@@ -37,7 +34,7 @@
 
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
-                  <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
+                  <i class="el-icon-circle-check input-symbol"></i>
                   <el-input v-model="form.captcha" :placeholder="$t('retrievePassword.captchaPlaceholder')" style="flex: 1;" />
                 </div>
                 <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
@@ -47,7 +44,7 @@
               <!-- 手机验证码 -->
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
-                  <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
+                  <i class="el-icon-mobile-phone input-symbol"></i>
                   <el-input v-model="form.mobileCaptcha" :placeholder="$t('retrievePassword.mobileCaptchaPlaceholder')" style="flex: 1;" maxlength="6" />
                 </div>
                 <el-button type="primary" class="send-captcha-btn" :disabled="!canSendMobileCaptcha"
@@ -60,13 +57,13 @@
 
               <!-- 新密码 -->
               <div class="input-box">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
+                <i class="el-icon-lock input-symbol"></i>
                 <el-input v-model="form.newPassword" :placeholder="$t('retrievePassword.newPasswordPlaceholder')" type="password" show-password />
               </div>
 
               <!-- 确认新密码 -->
               <div class="input-box">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
+                <i class="el-icon-lock input-symbol"></i>
                 <el-input v-model="form.confirmPassword" :placeholder="$t('retrievePassword.confirmNewPasswordPlaceholder')" type="password" show-password />
               </div>
 
@@ -103,10 +100,7 @@ import Api from '@/apis/api';
 import VersionFooter from '@/components/VersionFooter.vue';
 import { getUUID, goToPage, showDanger, showSuccess, validateMobile, sm2Encrypt } from '@/utils';
 import { mapState } from 'vuex';
-import i18n from '@/i18n';
 
-// 导入语言切换功能
-import { changeLanguage } from '@/i18n';
 
 export default {
   name: 'retrieve',
@@ -119,30 +113,7 @@ export default {
       mobileAreaList: state => state.pubConfig.mobileAreaList,
       sm2PublicKey: state => state.pubConfig.sm2PublicKey
     }),
-    // 获取当前语言
-    currentLanguage() {
-      return i18n.locale || "zh_CN";
-    },
-    // 根据当前语言获取对应的xiaozhi-ai图标
-    xiaozhiAiIcon() {
-      const currentLang = this.currentLanguage;
-      switch (currentLang) {
-        case "zh_CN":
-          return require("@/assets/xiaozhi-ai.png");
-        case "zh_TW":
-          return require("@/assets/xiaozhi-ai_zh_TW.png");
-        case "en":
-          return require("@/assets/xiaozhi-ai_en.png");
-        case "de":
-          return require("@/assets/xiaozhi-ai_de.png");
-        case "vi":
-          return require("@/assets/xiaozhi-ai_vi.png");
-        case "pt_BR":
-          return require("@/assets/xiaozhi-ai_en.png");
-        default:
-          return require("@/assets/xiaozhi-ai.png");
-      }
-    },
+
     canSendMobileCaptcha() {
       return this.countdown === 0 && validateMobile(this.form.mobile, this.form.areaCode);
     }
@@ -150,7 +121,7 @@ export default {
   data() {
     return {
       form: {
-        areaCode: '+86',
+        areaCode: '+886',
         mobile: '',
         captcha: '',
         captchaId: '',
@@ -168,7 +139,7 @@ export default {
   },
   methods: {
     openPage(url) {
-      const lang = this.$i18n ? this.$i18n.locale : 'zh_CN';
+      const lang = this.$i18n ? this.$i18n.locale : 'zh_TW';
       if (!lang.startsWith('zh')) {
         url = url.replace('.html', '-en.html');
       }

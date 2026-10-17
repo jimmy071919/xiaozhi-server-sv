@@ -15,26 +15,12 @@
             $route.path === '/role-config' ||
             $route.path === '/device-management',
         }" @click="handleRouter('home')">
-          <img loading="lazy" alt="" src="@/assets/header/robot.png" :style="{
-            filter:
-              $route.path === '/home' ||
-                $route.path === '/role-config' ||
-                $route.path === '/device-management'
-                ? 'brightness(0) invert(1)'
-                : 'None',
-          }" />
           <span class="nav-text">{{ $t("header.smartManagement") }}</span>
         </div>
         <!-- 普通用户显示音色克隆 -->
         <div v-if="!userInfo.superAdmin && featureStatus.voiceClone" class="equipment-management"
           :class="{ 'active-tab': $route.path === '/voice-clone-management' }"
           @click="handleRouter('voiceCloneManagement')">
-          <img loading="lazy" alt="" src="@/assets/header/voice.png" :style="{
-            filter:
-              $route.path === '/voice-clone-management'
-                ? 'brightness(0) invert(1)'
-                : 'None',
-          }" />
           <span class="nav-text">{{ $t("header.voiceCloneManagement") }}</span>
         </div>
 
@@ -46,13 +32,6 @@
               $route.path === '/voice-resource-management',
           }" @visible-change="handleVoiceCloneDropdownVisibleChange">
           <span class="el-dropdown-link">
-            <img loading="lazy" alt="" src="@/assets/header/voice.png" :style="{
-              filter:
-                $route.path === '/voice-clone-management' ||
-                  $route.path === '/voice-resource-management'
-                  ? 'brightness(0) invert(1)'
-                  : 'None',
-            }" />
             <span class="nav-text">{{ $t("header.voiceCloneManagement") }}</span>
             <i class="el-icon-arrow-down" :class="{ 'rotate-down': voiceCloneDropdownVisible }"></i>
           </span>
@@ -68,28 +47,16 @@
 
         <div v-if="userInfo.superAdmin" class="equipment-management"
           :class="{ 'active-tab': $route.path === '/model-config' }" @click="handleRouter('modelConfig')">
-          <img loading="lazy" alt="" src="@/assets/header/model_config.png" :style="{
-            filter:
-              $route.path === '/model-config' ? 'brightness(0) invert(1)' : 'None',
-          }" />
           <span class="nav-text">{{ $t("header.modelConfig") }}</span>
         </div>
         <div v-if="featureStatus.knowledgeBase" class="equipment-management"
           :class="{ 'active-tab': $route.path === '/knowledge-base-management' || $route.path === '/knowledge-file-upload' }"
           @click="handleRouter('knowledgeBaseManagement')">
-          <img loading="lazy" alt="" src="@/assets/header/knowledge_base.png" :style="{
-            filter:
-              $route.path === '/knowledge-base-management' || $route.path === '/knowledge-file-upload' ? 'brightness(0) invert(1)' : 'None',
-          }" />
           <span class="nav-text">{{ $t("header.knowledgeBase") }}</span>
         </div>
         <div v-if="featureStatus.addressBook" class="equipment-management"
           :class="{ 'active-tab': $route.path === '/address-book-management' }"
           @click="handleRouter('addressBookManagement')">
-          <img loading="lazy" alt="" src="@/assets/header/address_book.png" :style="{
-            filter:
-              $route.path === '/address-book-management' ? 'brightness(0) invert(1)' : 'None',
-          }" />
           <span class="nav-text">{{ $t("header.addressBook") }}</span>
         </div>
         <el-dropdown v-if="userInfo.superAdmin" trigger="click" class="equipment-management more-dropdown" :class="{
@@ -105,20 +72,6 @@
             $route.path === '/replacement-word-management'
         }" @visible-change="handleParamDropdownVisibleChange">
           <span class="el-dropdown-link">
-            <img loading="lazy" alt="" src="@/assets/header/param_management.png" :style="{
-              filter:
-                $route.path === '/dict-management' ||
-                  $route.path === '/params-management' ||
-                  $route.path === '/provider-management' ||
-                  $route.path === '/server-side-management' ||
-                  $route.path === '/agent-template-management' ||
-                  $route.path === '/ota-management' ||
-                  $route.path === '/user-management' ||
-                  $route.path === '/feature-management' ||
-                  $route.path === '/replacement-word-management'
-                  ? 'brightness(0) invert(1)'
-                  : 'None',
-            }" />
             <span class="nav-text">{{ $t("header.paramDictionary") }}</span>
             <i class="el-icon-arrow-down" :class="{ 'rotate-down': paramDropdownVisible }"></i>
           </span>
