@@ -1,21 +1,15 @@
 <template>
   <div class="welcome">
     <el-container style="height: 100%">
-      <el-header>
-        <div style="
-            display: flex;
-            align-items: center;
-            margin-top: 11px;
-            margin-left: 11px;
-            gap: 10px;
-          ">
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 42px; height: 42px" />
-          <img loading="lazy" alt="" :src="xiaozhiAiIcon" style="height: 20px" />
-        </div>
+      <el-header class="auth-header">
+        <div class="auth-brand"><span class="auth-brand-mark">X</span><span>小智控制台</span></div>
       </el-header>
-      <div class="login-person">
-        <img loading="lazy" alt="" src="@/assets/login/login-person.png" style="width: 100%" />
-      </div>
+      <section class="auth-intro" aria-label="產品介紹">
+        <span class="auth-eyebrow">VOICE AI CONSOLE</span>
+        <h1>讓語音助理，<br>回到簡單好用。</h1>
+        <p>在同一個地方管理裝置、角色與模型設定。</p>
+        <div class="auth-status"><span></span> 系統服務正常</div>
+      </section>
       <el-main style="position: relative">
         <div class="login-box" @keyup.enter="login">
           <div style="
@@ -25,7 +19,6 @@
               margin-bottom: 39px;
               padding: 0 30px;
             ">
-            <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px; height: 34px" />
             <div class="login-text">{{ $t("login.title") }}</div>
 
             <div class="login-welcome">
@@ -40,9 +33,7 @@
                 <i class="el-icon-arrow-down el-icon--right" :class="{ 'rotate-down': languageDropdownVisible }"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="changeLanguage('zh_CN')">
-                  {{ $t("language.zhCN") }}
-                </el-dropdown-item>
+
                 <el-dropdown-item @click.native="changeLanguage('zh_TW')">
                   {{ $t("language.zhTW") }}
                 </el-dropdown-item>
@@ -65,7 +56,7 @@
             <!-- 用户名登录 -->
             <template v-if="!isMobileLogin">
               <div class="input-box">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/username.png" />
+                <i class="el-icon-user input-symbol"></i>
                 <el-input v-model="form.username" :placeholder="$t('login.usernamePlaceholder')" />
               </div>
             </template>
@@ -84,7 +75,7 @@
             </template>
 
             <div class="input-box">
-              <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
+              <i class="el-icon-lock input-symbol"></i>
               <el-input v-model="form.password" :placeholder="$t('login.passwordPlaceholder')" type="password"
                 show-password />
             </div>
@@ -96,7 +87,7 @@
                 gap: 10px;
               ">
               <div class="input-box" style="width: calc(100% - 130px); margin-top: 0">
-                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
+                <i class="el-icon-circle-check input-symbol"></i>
                 <el-input v-model="form.captcha" :placeholder="$t('login.captchaPlaceholder')" style="flex: 1" />
               </div>
               <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
@@ -175,7 +166,7 @@ export default {
     }),
     // 获取当前语言
     currentLanguage() {
-      return i18n.locale || "zh_CN";
+      return i18n.locale || "zh_TW";
     },
     // 获取当前语言显示文本
     currentLanguageText() {
@@ -194,7 +185,7 @@ export default {
         case "pt_BR":
           return this.$t("language.ptBR");
         default:
-          return this.$t("language.zhCN");
+          return this.$t("language.zhTW");
       }
     },
     // 根据当前语言获取对应的xiaozhi-ai图标
@@ -224,7 +215,7 @@ export default {
         password: "",
         captcha: "",
         captchaId: "",
-        areaCode: "+86",
+        areaCode: "+886",
         mobile: "",
       },
       captchaUuid: "",
@@ -242,7 +233,7 @@ export default {
   },
   methods: {
     openPage(url) {
-      const lang = this.$i18n ? this.$i18n.locale : 'zh_CN';
+      const lang = this.$i18n ? this.$i18n.locale : 'zh_TW';
       if (!lang.startsWith('zh')) {
         url = url.replace('.html', '-en.html');
       }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-Hant-TW">
 
 <head>
   <meta charset="utf-8">
@@ -8,9 +8,7 @@
   <meta name="description" content="<%= process.env.VUE_APP_DESCRIPTION %>">
   <meta name="keywords" content="<%= process.env.VUE_APP_KEYWORDS %>">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <title>
-    <%= process.env.VUE_APP_TITLE %>
-  </title>
+  <title>小智控制台</title>
   <% if (htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
     <% for (var i in htmlWebpackPlugin.options.cdn.css) { %>
       <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.cdn.css[i] %>">

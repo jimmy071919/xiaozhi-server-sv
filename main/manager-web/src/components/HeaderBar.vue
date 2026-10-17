@@ -3,8 +3,8 @@
     <div class="header-container">
       <!-- 左侧元素 -->
       <div class="header-left" @click="handleRouter('home')">
-        <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" class="logo-img" />
-        <img loading="lazy" alt="" :src="xiaozhiAiIcon" class="brand-img" />
+        <span class="brand-mark">X</span>
+        <span class="brand-name">小智控制台</span>
       </div>
 
       <!-- 中间导航菜单 -->
@@ -156,7 +156,7 @@
 
       <!-- 右侧元素 -->
       <div class="header-right">
-        <img loading="lazy" alt="" src="@/assets/home/avatar.png" class="avatar-img" @click="handleAvatarClick" />
+        <span class="avatar-img" @click="handleAvatarClick">{{ (userInfo.username || 'U').slice(0, 1).toUpperCase() }}</span>
         <span class="el-user-dropdown" @click="handleAvatarClick">
           {{ userInfo.username || "加载中..." }}
           <i class="el-icon-arrow-down el-icon--right" :class="{ 'rotate-down': userMenuVisible }"></i>
@@ -234,7 +234,7 @@ export default {
     }),
     // 获取当前语言
     currentLanguage() {
-      return i18n.locale || "zh_CN";
+      return i18n.locale || "zh_TW";
     },
     // 获取当前语言显示文本
     currentLanguageText() {
@@ -253,7 +253,7 @@ export default {
         case "pt_BR":
           return this.$t("language.ptBR");
         default:
-          return this.$t("language.zhCN");
+          return this.$t("language.zhTW");
       }
     },
     // 根据当前语言获取对应的xiaozhi-ai图标
@@ -283,10 +283,7 @@ export default {
           label: this.currentLanguageText,
           value: "language",
           children: [
-            {
-              label: this.$t("language.zhCN"),
-              value: "zh_CN",
-            },
+
             {
               label: this.$t("language.zhTW"),
               value: "zh_TW",
@@ -495,8 +492,9 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  background: linear-gradient(180deg, #dfeafe, #eff4ff);
-  height: 63px !important;
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid #e5e7eb;
+  height: 64px !important;
   min-width: 900px;
   overflow: visible;
 }
@@ -506,34 +504,40 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  padding: 0 10px;
+  padding: 0 18px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 130px;
+  min-width: 150px;
   cursor: pointer;
 }
 
-.logo-img {
-  width: 42px;
-  height: 42px;
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  background: #111827;
+  border-radius: 8px;
 }
 
-.brand-img {
-  height: 20px;
+.brand-name {
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .header-center {
   display: flex;
   align-items: center;
-  gap: 25px;
-  background: white;
-  border-radius: 30px;
-  box-shadow: 0 0 6px 0px #cfe1fb;
-  padding: 4px;
+  gap: 4px;
+  padding: 3px;
 }
 
 .header-right {
@@ -544,14 +548,14 @@ export default {
 }
 
 .equipment-management {
-  padding: 8px 16px;
-  border-radius: 30px;
+  padding: 9px 13px;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   font-size: 16px;
   font-weight: 500;
   gap: 7px;
-  color: #6c79a8;
+  color: #6b7280;
   margin-left: 1px;
   align-items: center;
   transition: all 0.3s ease;
@@ -561,32 +565,29 @@ export default {
 }
 
 .equipment-management.active-tab {
-  color: #fff !important;
-  background: linear-gradient(90deg, #2983fe 0%, #5251fc 100%);
-  box-shadow: 0 1px 8px rgba(41, 131, 254, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  color: #1d4ed8 !important;
+  background: #eff6ff;
+  box-shadow: none;
   position: relative;
   overflow: hidden;
 }
 
-.equipment-management.active-tab::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
-  pointer-events: none;
-}
+.equipment-management.active-tab::before { display: none; }
 
 .equipment-management img {
-  width: 15px;
-  height: 13px;
+  display: none;
 }
 
 .avatar-img {
-  width: 21px;
-  height: 21px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  background: #2563eb;
+  border-radius: 50%;
   flex-shrink: 0;
   cursor: pointer;
 }

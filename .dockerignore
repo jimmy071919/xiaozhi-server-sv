@@ -5,3 +5,8 @@ __pycache__
 Dockerfile
 tmp/
 data/
+**/node_modules/
+**/dist/
+main/xiaozhi-server/models/
+main/xiaozhi-server/mysql/
+main/xiaozhi-server/uploadfile/

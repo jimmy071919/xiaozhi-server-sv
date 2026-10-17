@@ -1,0 +1,9 @@
+FROM node:18 AS web-builder
+WORKDIR /app
+COPY main/manager-web/package*.json ./
+RUN npm ci && node node_modules/v-code-diff/scripts/postinstall.cjs
+COPY main/manager-web ./
+RUN npm run build
+
+FROM ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:web_latest
+COPY --from=web-builder /app/dist /usr/share/nginx/html

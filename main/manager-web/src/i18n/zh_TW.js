@@ -401,8 +401,8 @@ export default {
   'replacementWordManagement.batchDeleteHint': '批量刪除提示',
 
   // 登录页面文本
-  'login.title': '登錄',
-  'login.welcome': 'WELCOME TO LOGIN',
+  'login.title': '登入',
+  'login.welcome': '安全登入',
   'login.username': '用戶名',
   'login.usernamePlaceholder': '請輸入用戶名',
   'login.mobilePlaceholder': '請輸入手機號碼',
@@ -410,8 +410,8 @@ export default {
   'login.passwordPlaceholder': '請輸入密碼',
   'login.captchaPlaceholder': '請輸入驗證碼',
   'login.loginButton': '登錄',
-  'login.login': '登錄',
-  'login.register': '新用戶註冊',
+  'login.login': '登入',
+  'login.register': '建立帳號',
   'login.forgotPassword': '忘記密碼',
   'login.forgetPassword': '忘記密碼?',
   'login.mobileLogin': '手機號碼登錄',
@@ -722,9 +722,9 @@ export default {
   'language.ptBR': 'Português (Brasil)',
 
   // 首頁文本
-  'home.addAgent': '添加智能體',
-  'home.greeting': '你好小智',
-  'home.wish': '讓我們度過美好的一天！',
+  'home.addAgent': '新增助理',
+  'home.greeting': '語音助理',
+  'home.wish': '集中管理裝置與角色',
   'home.languageModel': '語言模型',
   'home.voiceModel': '音色模型',
   'home.configureRole': '配置角色',

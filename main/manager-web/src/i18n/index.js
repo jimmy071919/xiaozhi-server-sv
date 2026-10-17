@@ -21,14 +21,14 @@ Vue.use(VueI18n);
 const getDefaultLanguage = () => {
   const savedLang = localStorage.getItem('userLanguage');
   if (savedLang) {
-    return savedLang;
+    return savedLang === 'zh_CN' ? 'zh_TW' : savedLang;
   }
   const browserLang = navigator.language || navigator.userLanguage;
   if (browserLang.indexOf('zh') === 0) {
     if (browserLang === 'zh-TW' || browserLang === 'zh-HK' || browserLang === 'zh-MO') {
       return 'zh_TW';
     }
-    return 'zh_CN';
+    return 'zh_TW';
   }
   if (browserLang.indexOf('de') === 0) {
     return 'de';
@@ -44,7 +44,7 @@ const getDefaultLanguage = () => {
 
 const i18n = new VueI18n({
   locale: getDefaultLanguage(),
-  fallbackLocale: 'zh_CN',
+  fallbackLocale: 'zh_TW',
   messages: {
     'zh_CN': { ...zhLocale, ...zhCN },
     'zh_TW': { ...twLocale, ...zhTW },

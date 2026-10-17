@@ -13,9 +13,7 @@
             <div class="hellow-text">
               {{ $t('home.wish') }}
             </div>
-            <div class="hi-hint">
-              let's have a wonderful day!
-            </div>
+            <div class="hi-hint">管理你的語音助理與連線裝置</div>
             <div class="add-device-options">
             <div class="search-container">
               <div class="search-wrapper">
@@ -85,7 +83,7 @@
       >
         <template slot="title">
           <div class="delete-agent-title">
-            <img src="@/assets/knowledge-base/level.png" class="delete-agent-title-icon" />
+            <i class="el-icon-delete delete-agent-title-icon"></i>
             <span>{{ $t('home.deleteConfirmTitle') }}</span>
           </div>
         </template>
@@ -438,7 +436,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #eff4ff;
+  background: #f6f7f9;
   background-size: cover;
   /* 确保背景图像覆盖整个元素 */
   background-position: center;
@@ -451,19 +449,17 @@ export default {
 
 .add-device {
   height: 195px;
-  border-radius: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
   position: relative;
-  background: linear-gradient(269.62deg,
-      #e0e6fd 0%,
-      #cce7ff 49.69%,
-      #d3d3fe 100%);
+  background: #ffffff;
 }
 
 .add-device-bg {
   width: 100%;
   height: 100%;
   text-align: left;
-  background-image: url("@/assets/home/main-top-bg.png");
+  background-image: none;
   background-size: cover;
   /* 确保背景图像覆盖整个元素 */
   background-position: center;
