@@ -64,3 +64,9 @@ mybatis-plus:
     prefix:
     blobType: BLOB
     boolValue: TRUE
+
+# The value is supplied only through an environment variable/secret mount.
+# Generate with: openssl rand -base64 32
+codex:
+  oauth:
+    encryption-key: ${CODEX_OAUTH_ENCRYPTION_KEY:}

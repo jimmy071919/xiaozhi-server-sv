@@ -96,6 +96,9 @@ public class ShiroConfig {
         filterMap.put("/agent/chat-history/download/**", "anon");
         filterMap.put("/agent/chat-summary/**", "server");
         filterMap.put("/agent/chat-title/**", "server");
+        // xiaozhi-server obtains short-lived Codex access tokens through this broker.
+        // The browser-facing login endpoints remain protected by normal admin auth.
+        filterMap.put("/codex/oauth/broker/**", "server");
         filterMap.put("/agent/play/**", "anon");
         filterMap.put("/voiceClone/play/**", "anon");
         filterMap.put("/**", "oauth2");

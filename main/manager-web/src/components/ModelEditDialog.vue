@@ -93,6 +93,27 @@
         </div>
       </template>
     </el-form>
+
+    <div v-if="form.configJson.type === 'codex_oauth'" class="codex-oauth-panel">
+      <div class="section-title">OpenAI Codex OAuth</div>
+      <div class="section-divider"></div>
+      <el-alert v-if="codexStatus.connected" type="success" :closable="false"
+        :title="`已連線${codexStatus.accountId ? `（${codexStatus.accountId}）` : ''}`" />
+      <template v-else>
+        <p>OAuth 憑證只會加密儲存在伺服器，不會寫入模型設定或顯示於瀏覽器。</p>
+        <div v-if="codexLogin.userCode" class="device-code">
+          <a :href="codexLogin.verificationUri" target="_blank" rel="noopener noreferrer">開啟 OpenAI 登入頁</a>
+          <strong>{{ codexLogin.userCode }}</strong>
+          <span>完成授權後，本頁會自動確認。</span>
+        </div>
+      </template>
+      <div class="oauth-actions">
+        <el-button v-if="!codexStatus.connected" type="primary" :loading="codexLoading"
+          :disabled="!form.id" @click="startCodexLogin">開始登入</el-button>
+        <el-button v-else type="danger" plain :loading="codexLoading" @click="logoutCodex">登出</el-button>
+        <span v-if="!form.id">請先儲存模型設定，再進行 OAuth 登入。</span>
+      </div>
+    </div>
   </CustomDialog>
 </template>
 
@@ -122,6 +143,10 @@ export default {
       pendingProviderType: null,
       pendingModelData: null,
       dynamicCallInfoFields: [],
+      codexStatus: { connected: false, status: "disconnected", accountId: null },
+      codexLogin: {},
+      codexLoading: false,
+      codexPollTimer: null,
       fieldJsonMap: {}, // 用于存储JSON字段的字符串形式
       sensitive_keys: [
         "api_key",
@@ -187,6 +212,7 @@ export default {
       }
     },
     handleClose() {
+      this.stopCodexPolling();
       this.saving = false;
       // 处理关闭弹窗闪动问题
       setTimeout(() => {
@@ -207,6 +233,8 @@ export default {
         configJson: {},
       };
       this.fieldJsonMap = {};
+      this.codexStatus = { connected: false, status: "disconnected", accountId: null };
+      this.codexLogin = {};
     },
     resetProviders() {
       this.providers = [];
@@ -353,6 +381,56 @@ export default {
         sort: Number(model.sort) || 0,
         configJson: { ...configJson },
       };
+      if (this.form.configJson.type === "codex_oauth") this.loadCodexStatus();
+    },
+    loadCodexStatus() {
+      if (!this.form.id) return;
+      Api.model.getCodexOAuthStatus(this.form.id, (res) => {
+        if (res.data && res.data.code === 0) this.codexStatus = res.data.data;
+      });
+    },
+    startCodexLogin() {
+      if (!this.form.id) return;
+      this.codexLoading = true;
+      Api.model.startCodexOAuth(this.form.id, (res) => {
+        this.codexLoading = false;
+        if (res.data && res.data.code === 0) {
+          this.codexLogin = res.data.data;
+          this.codexStatus = { connected: false, status: "pending", accountId: null };
+          this.startCodexPolling();
+        } else {
+          this.$message.error((res.data && res.data.msg) || "無法開始 Codex OAuth 登入");
+        }
+      });
+    },
+    startCodexPolling() {
+      this.stopCodexPolling();
+      const interval = Math.max(Number(this.codexLogin.interval) || 5, 2) * 1000;
+      this.codexPollTimer = setInterval(() => {
+        Api.model.pollCodexOAuth(this.form.id, (res) => {
+          if (res.data && res.data.code === 0) {
+            this.codexStatus = res.data.data;
+            if (this.codexStatus.connected || this.codexStatus.status === "expired") {
+              this.stopCodexPolling();
+              if (this.codexStatus.connected) this.$message.success("Codex OAuth 登入成功");
+            }
+          }
+        });
+      }, interval);
+    },
+    stopCodexPolling() {
+      if (this.codexPollTimer) clearInterval(this.codexPollTimer);
+      this.codexPollTimer = null;
+    },
+    logoutCodex() {
+      this.codexLoading = true;
+      Api.model.logoutCodexOAuth(this.form.id, (res) => {
+        this.codexLoading = false;
+        if (res.data && res.data.code === 0) {
+          this.codexStatus = { connected: false, status: "disconnected", accountId: null };
+          this.codexLogin = {};
+        }
+      });
     },
     handleJsonChange(field, value) {
       const parsed = this.validateJson(value);
@@ -524,6 +602,13 @@ export default {
   }
   ::v-deep .el-form-item__label {
     line-height: 38px;
+  }
+
+  .codex-oauth-panel {
+    margin-top: 24px;
+    .device-code { display: flex; align-items: center; gap: 18px; margin: 16px 0; }
+    .device-code strong { font-size: 22px; letter-spacing: 2px; }
+    .oauth-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
   }
 }
 </style>

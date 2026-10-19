@@ -22,6 +22,22 @@ function retryCallbackRequest(retry, retryCount, onTerminalFailure, error, retry
 }
 
 export default {
+  getCodexOAuthStatus(modelId, callback) {
+    RequestService.sendRequest().url(`${getServiceUrl()}/codex/oauth/${modelId}/status`)
+      .method('GET').success(callback).send();
+  },
+  startCodexOAuth(modelId, callback) {
+    RequestService.sendRequest().url(`${getServiceUrl()}/codex/oauth/${modelId}/start`)
+      .method('POST').success(callback).send();
+  },
+  pollCodexOAuth(modelId, callback) {
+    RequestService.sendRequest().url(`${getServiceUrl()}/codex/oauth/${modelId}/poll`)
+      .method('POST').success(callback).send();
+  },
+  logoutCodexOAuth(modelId, callback) {
+    RequestService.sendRequest().url(`${getServiceUrl()}/codex/oauth/${modelId}`)
+      .method('DELETE').success(callback).send();
+  },
   // 获取模型配置列表
   getModelList(params, callback) {
     const queryParams = new URLSearchParams({

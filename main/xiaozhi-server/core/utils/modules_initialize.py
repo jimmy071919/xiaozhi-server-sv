@@ -36,14 +36,20 @@ def initialize_modules(
     # 初始化LLM模块
     if init_llm:
         select_llm_module = config["selected_module"]["LLM"]
+        llm_config = config["LLM"][select_llm_module].copy()
         llm_type = (
             select_llm_module
-            if "type" not in config["LLM"][select_llm_module]
-            else config["LLM"][select_llm_module]["type"]
+            if "type" not in llm_config
+            else llm_config["type"]
         )
+        if llm_type == "codex_oauth":
+            manager_api = config.get("manager-api", {})
+            llm_config["_model_id"] = select_llm_module
+            llm_config["_broker_url"] = manager_api.get("url", "")
+            llm_config["_server_secret"] = manager_api.get("secret", "")
         modules["llm"] = llm.create_instance(
             llm_type,
-            config["LLM"][select_llm_module],
+            llm_config,
         )
         logger.bind(tag=TAG).info(f"初始化组件: llm成功 {select_llm_module}")
 

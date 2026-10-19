@@ -29,13 +29,16 @@ services:
       - ./agent-base-prompt.txt:/opt/xiaozhi-esp32-server/agent-base-prompt.txt:ro
       # 套用本地連線邏輯修正：位置相關問題先查裝置定位
       - ./core/connection.py:/opt/xiaozhi-esp32-server/core/connection.py:ro
+      # Native Codex OAuth provider and model-id/manager-secret wiring
+      - ./core/providers/llm/codex_oauth:/opt/xiaozhi-esp32-server/core/providers/llm/codex_oauth:ro
+      - ./core/utils/modules_initialize.py:/opt/xiaozhi-esp32-server/core/utils/modules_initialize.py:ro
 
   # manager-api和manager-web模块
   xiaozhi-esp32-server-web:
     image: xiaozhi-server-sv-web:latest
     build:
       context: ../..
-      dockerfile: Dockerfile-web-local
+      dockerfile: Dockerfile-web
     container_name: xiaozhi-esp32-server-web
     restart: always
     networks:
@@ -56,6 +59,8 @@ services:
       - SPRING_DATA_REDIS_HOST=xiaozhi-esp32-server-redis
       - SPRING_DATA_REDIS_PASSWORD=
       - SPRING_DATA_REDIS_PORT=6379
+      # Must be a base64-encoded 32-byte secret supplied by the deployment environment.
+      - CODEX_OAUTH_ENCRYPTION_KEY=${CODEX_OAUTH_ENCRYPTION_KEY:-}
     volumes:
       # 配置文件目录
       - ./uploadfile:/uploadfile
