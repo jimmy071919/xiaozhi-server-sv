@@ -774,3 +774,17 @@ databaseChangeLog:
         - sqlFile:
             encoding: utf8
             path: classpath:db/changelog/202610191130.sql
+  - changeSet:
+      id: 202610191131
+      author: jimmy
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: classpath:db/changelog/202610191131.sql
+  - changeSet:
+      id: 202610191132
+      author: jimmy
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: classpath:db/changelog/202610191132.sql
