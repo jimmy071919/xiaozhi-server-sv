@@ -19,7 +19,7 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      - TZ=Asia/Shanghai
+      - TZ=Asia/Taipei
     volumes:
       # 配置文件目录
       - ./data:/opt/xiaozhi-esp32-server/data
@@ -49,8 +49,8 @@ services:
       # 智控台只提供给本机反向代理；公网入口仍使用 8002
       - "127.0.0.1:18002:8002"
     environment:
-      - TZ=Asia/Shanghai
-      - SPRING_DATASOURCE_DRUID_URL=jdbc:mysql://xiaozhi-esp32-server-db:3306/xiaozhi_esp32_server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&connectTimeout=30000&socketTimeout=30000&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+      - TZ=Asia/Taipei
+      - SPRING_DATASOURCE_DRUID_URL=jdbc:mysql://xiaozhi-esp32-server-db:3306/xiaozhi_esp32_server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Taipei&nullCatalogMeansCurrent=true&connectTimeout=30000&socketTimeout=30000&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
       - SPRING_DATASOURCE_DRUID_USERNAME=root
       - SPRING_DATASOURCE_DRUID_PASSWORD=123456
       - SPRING_DATA_REDIS_HOST=xiaozhi-esp32-server-redis
@@ -89,7 +89,7 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
     environment:
-      - TZ=Asia/Shanghai
+      - TZ=Asia/Taipei
       - MYSQL_ROOT_PASSWORD=123456
       - MYSQL_DATABASE=xiaozhi_esp32_server
       - MYSQL_INITDB_ARGS="--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
