@@ -42,6 +42,7 @@ class FakeResponse:
 def config():
     return {
         "model_name": "gpt-test",
+        "service_tier": "priority",
         "_model_id": "model-1",
         "_broker_url": "http://manager/xiaozhi",
         "_server_secret": "server-secret",
@@ -85,6 +86,7 @@ def test_broker_credentials_are_not_part_of_model_config_or_response_body(monkey
     assert "oauth-access-token" not in json.dumps(seen["request_json"])
     assert seen["request_json"]["input"][0]["role"] == "developer"
     assert seen["request_json"]["store"] is False
+    assert seen["request_json"]["service_tier"] == "priority"
 
 
 def test_response_with_functions_sends_native_tool_schema_and_yields_completed_call(monkeypatch):

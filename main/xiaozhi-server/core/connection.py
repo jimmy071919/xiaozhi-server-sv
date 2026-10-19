@@ -936,13 +936,21 @@ class ConnectionHandler:
                 "correct_words"
             ]
 
+        # OAuth credentials and the manager-api address are server-only settings,
+        # omitted from the per-agent response. Pass them to provider initialization
+        # without logging or persisting them in the agent configuration.
+        module_config = dict(private_config)
+        manager_api_config = self.config.get("manager-api")
+        if manager_api_config:
+            module_config["manager-api"] = manager_api_config
+
         # 使用 run_in_executor 在线程池中执行 initialize_modules，避免阻塞主循环
         try:
             modules = await self.loop.run_in_executor(
                 None,  # 使用默认线程池
                 initialize_modules,
                 self.logger,
-                private_config,
+                module_config,
                 init_vad,
                 init_asr,
                 init_llm,

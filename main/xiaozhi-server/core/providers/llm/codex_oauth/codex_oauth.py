@@ -22,7 +22,8 @@ class LLMProvider(LLMProviderBase):
     RESPONSES_URL = "https://chatgpt.com/backend-api/codex/responses"
 
     def __init__(self, config):
-        self.model_name = config.get("model_name", "gpt-5-codex")
+        self.model_name = config.get("model_name", "gpt-6-sol")
+        self.service_tier = config.get("service_tier", "priority")
         self.model_id = config.get("_model_id")
         self.broker_url = config.get("_broker_url", "").rstrip("/")
         self.server_secret = config.get("_server_secret")
@@ -83,7 +84,7 @@ class LLMProvider(LLMProviderBase):
         return tools
 
     @staticmethod
-    def _request_body(dialogue, model_name, functions=None):
+    def _request_body(dialogue, model_name, functions=None, service_tier=None):
         input_items = []
         for message in dialogue:
             role = message.get("role", "user")
@@ -132,7 +133,7 @@ class LLMProvider(LLMProviderBase):
                 "role": role,
                 "content": [{"type": content_type, "text": str(content)}],
             })
-        return {
+        body = {
             "model": model_name,
             "stream": True,
             "input": input_items,
@@ -143,6 +144,10 @@ class LLMProvider(LLMProviderBase):
             "store": False,
             "include": [],
         }
+        if service_tier and service_tier != "standard":
+            # Codex config calls this Fast; the Responses API wire value is `priority`.
+            body["service_tier"] = "priority" if service_tier == "fast" else service_tier
+        return body
 
     def _stream(self, dialogue, model_name, functions=None, with_functions=False):
         token, account_id = self._get_credentials()
@@ -152,7 +157,7 @@ class LLMProvider(LLMProviderBase):
             "Content-Type": "application/json",
             "Accept": "text/event-stream",
         }
-        body = self._request_body(dialogue, model_name, functions)
+        body = self._request_body(dialogue, model_name, functions, self.service_tier)
         with httpx.stream(
             "POST",
             self.RESPONSES_URL,
