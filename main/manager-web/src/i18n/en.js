@@ -518,6 +518,8 @@ export default {
   'device.deviceStatus': 'Status',
   'device.online': 'Online',
   'device.offline': 'Offline',
+  'device.viewMessages': 'View messages',
+  'device.macAddressRequired': 'This device has no MAC address, so its messages cannot be loaded.',
 
   // Message tips
   'message.success': 'Operation Successful',
@@ -533,6 +535,7 @@ export default {
   'chatHistory.dialogTitle': "'s Chat History",
   'chatHistory.loading': 'Loading...',
   'chatHistory.noMoreRecords': 'No more records',
+  'chatHistory.noMessagesForDevice': 'No chat history for this device yet. Confirm chat-history reporting is enabled in the agent settings.',
   'chatHistory.selectSession': 'Please select a session to view chat history',
   'chatHistory.today': 'Today',
   'chatHistory.yesterday': 'Yesterday',

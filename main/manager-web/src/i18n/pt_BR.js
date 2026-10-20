@@ -518,6 +518,8 @@ export default {
   'device.deviceStatus': 'Status',
   'device.online': 'Online',
   'device.offline': 'Offline',
+  'device.viewMessages': 'Ver mensagens',
+  'device.macAddressRequired': 'Este dispositivo não tem endereço MAC, então não é possível carregar as mensagens.',
 
   // Mensagens de dica
   'message.success': 'Operação Realizada com Sucesso',
@@ -533,6 +535,7 @@ export default {
   'chatHistory.dialogTitle': ' - Histórico de Chat',
   'chatHistory.loading': 'Carregando...',
   'chatHistory.noMoreRecords': 'Não há mais registros',
+  'chatHistory.noMessagesForDevice': 'Ainda não há histórico de conversa para este dispositivo. Verifique se o registro de conversas está ativado nas configurações do agente.',
   'chatHistory.selectSession': 'Por favor, selecione uma sessão para visualizar o histórico de chat',
   'chatHistory.today': 'Hoje',
   'chatHistory.yesterday': 'Ontem',

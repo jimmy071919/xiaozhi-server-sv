@@ -26,7 +26,10 @@
                     </div>
                 </div>
                 <div v-if="loading" class="loading">{{ $t('chatHistory.loading') }}</div>
-                <div v-if="!hasMore" class="no-more">{{ $t('chatHistory.noMoreRecords') }}</div>
+                <div v-if="!loading && !sessions.length && !hasMore" class="no-more">
+                    {{ $t('chatHistory.noMessagesForDevice') }}
+                </div>
+                <div v-else-if="!hasMore" class="no-more">{{ $t('chatHistory.noMoreRecords') }}</div>
             </div>
             <div class="chat-content">
                 <div v-if="currentSessionId" class="messages">
@@ -106,6 +109,10 @@ export default {
         agentName: {
             type: String,
             required: true
+        },
+        macAddress: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -242,7 +249,7 @@ export default {
             this.sessions = [];
             this.messages = [];
             this.currentSessionId = '';
-            this.currentMacAddress = '';
+            this.currentMacAddress = this.macAddress || '';
             this.page = 1;
             this.loading = false;
             this.hasMore = true;
@@ -259,6 +266,9 @@ export default {
                 page: this.page,
                 limit: this.limit
             };
+            if (this.macAddress) {
+                params.macAddress = this.macAddress;
+            }
 
             Api.agent.getAgentSessions(this.agentId, params, (res) => {
                 if (res.data && res.data.data && Array.isArray(res.data.data.list)) {
@@ -292,7 +302,7 @@ export default {
                         return item;
                     })
                 }
-            });
+            }, this.macAddress);
         },
         handleScroll(e) {
             if (this.scrollTimer) {

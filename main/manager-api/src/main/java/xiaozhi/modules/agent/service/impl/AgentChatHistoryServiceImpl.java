@@ -53,9 +53,12 @@ public class AgentChatHistoryServiceImpl extends CrudRepository<AiAgentChatHisto
         // 构建查询条件
         QueryWrapper<AgentChatHistoryEntity> wrapper = new QueryWrapper<>();
         wrapper.select("session_id", "MAX(created_at) as created_at", "COUNT(*) as chat_count")
-                .eq("agent_id", agentId)
-                .groupBy("session_id")
-                .orderByDesc("created_at");
+                .eq("agent_id", agentId);
+        String macAddress = (String) params.get("macAddress");
+        if (macAddress != null && !macAddress.isBlank()) {
+            wrapper.eq("mac_address", macAddress);
+        }
+        wrapper.groupBy("session_id").orderByDesc("created_at");
 
         // 执行分页查询
         Page<Map<String, Object>> pageParam = new Page<>(page, limit);
@@ -74,12 +77,15 @@ public class AgentChatHistoryServiceImpl extends CrudRepository<AiAgentChatHisto
     }
 
     @Override
-    public List<AgentChatHistoryDTO> getChatHistoryBySessionId(String agentId, String sessionId) {
+    public List<AgentChatHistoryDTO> getChatHistoryBySessionId(String agentId, String sessionId, String macAddress) {
         // 构建查询条件
         QueryWrapper<AgentChatHistoryEntity> wrapper = new QueryWrapper<>();
         wrapper.eq("agent_id", agentId)
-                .eq("session_id", sessionId)
-                .orderByAsc("created_at");
+                .eq("session_id", sessionId);
+        if (macAddress != null && !macAddress.isBlank()) {
+            wrapper.eq("mac_address", macAddress);
+        }
+        wrapper.orderByAsc("created_at");
 
         // 查询聊天记录
         List<AgentChatHistoryEntity> historyList = list(wrapper);

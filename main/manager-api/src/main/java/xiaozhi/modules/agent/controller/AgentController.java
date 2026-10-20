@@ -222,7 +222,8 @@ public class AgentController {
     @RequiresPermissions("sys:role:normal")
     public Result<List<AgentChatHistoryDTO>> getAgentChatHistory(
             @PathVariable("id") String id,
-            @PathVariable("sessionId") String sessionId) {
+            @PathVariable("sessionId") String sessionId,
+            @RequestParam(value = "macAddress", required = false) String macAddress) {
         // 获取当前用户
         UserDetail user = SecurityUser.getUser();
 
@@ -232,7 +233,7 @@ public class AgentController {
         }
 
         // 查询聊天记录
-        List<AgentChatHistoryDTO> result = agentChatHistoryService.getChatHistoryBySessionId(id, sessionId);
+        List<AgentChatHistoryDTO> result = agentChatHistoryService.getChatHistoryBySessionId(id, sessionId, macAddress);
         return new Result<List<AgentChatHistoryDTO>>().ok(result);
     }
 

@@ -518,6 +518,8 @@ export default {
   'device.deviceStatus': 'Status',
   'device.online': 'Online',
   'device.offline': 'Offline',
+  'device.viewMessages': 'Nachrichten ansehen',
+  'device.macAddressRequired': 'Für dieses Gerät fehlt die MAC-Adresse. Nachrichten können nicht geladen werden.',
 
   // Message tips
   'message.success': 'Operation erfolgreich',
@@ -533,6 +535,7 @@ export default {
   'chatHistory.dialogTitle': "'s Chat-Verlauf",
   'chatHistory.loading': 'Lädt...',
   'chatHistory.noMoreRecords': 'Keine weiteren Datensätze',
+  'chatHistory.noMessagesForDevice': 'Für dieses Gerät gibt es noch keinen Chatverlauf. Prüfen Sie, ob die Chatprotokollierung in den Agent-Einstellungen aktiviert ist.',
   'chatHistory.selectSession': 'Bitte wählen Sie eine Sitzung aus, um den Chat-Verlauf anzuzeigen',
   'chatHistory.today': 'Heute',
   'chatHistory.yesterday': 'Gestern',

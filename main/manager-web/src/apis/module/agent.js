@@ -265,9 +265,10 @@ export default {
             }).send();
     },
     // 获取智能体聊天记录
-    getAgentChatHistory(agentId, sessionId, callback) {
+    getAgentChatHistory(agentId, sessionId, callback, macAddress = '') {
+        const macFilter = macAddress ? `?macAddress=${encodeURIComponent(macAddress)}` : '';
         RequestService.sendRequest()
-            .url(`${getServiceUrl()}/agent/${agentId}/chat-history/${sessionId}`)
+            .url(`${getServiceUrl()}/agent/${agentId}/chat-history/${sessionId}${macFilter}`)
             .method('GET')
             .success((res) => {
                 RequestService.clearRequestTime();
@@ -275,7 +276,7 @@ export default {
             })
             .networkFail(() => {
                 RequestService.reAjaxFun(() => {
-                    this.getAgentChatHistory(agentId, sessionId, callback);
+                    this.getAgentChatHistory(agentId, sessionId, callback, macAddress);
                 });
             }).send();
     },

@@ -518,6 +518,8 @@ export default {
   'device.deviceStatus': 'Trạng thái',
   'device.online': 'Trực tuyến',
   'device.offline': 'Ngoại tuyến',
+  'device.viewMessages': 'Xem tin nhắn',
+  'device.macAddressRequired': 'Thiết bị không có địa chỉ MAC nên không thể tải tin nhắn.',
 
   // Message tips
   'message.success': 'Thao tác thành công',
@@ -533,6 +535,7 @@ export default {
   'chatHistory.dialogTitle': "'s Lịch sử trò chuyện",
   'chatHistory.loading': 'Đang tải...',
   'chatHistory.noMoreRecords': 'Không còn bản ghi nào',
+  'chatHistory.noMessagesForDevice': 'Chưa có lịch sử trò chuyện cho thiết bị này. Hãy kiểm tra xem báo cáo lịch sử trò chuyện đã được bật trong cài đặt tác nhân chưa.',
   'chatHistory.selectSession': 'Vui lòng chọn một phiên để xem lịch sử trò chuyện',
   'chatHistory.today': 'Hôm nay',
   'chatHistory.yesterday': 'Hôm qua',

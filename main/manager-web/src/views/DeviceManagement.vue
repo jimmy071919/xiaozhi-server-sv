@@ -55,6 +55,9 @@
                   @change="handleOtaSwitchChange(scope.row)"></el-switch>
               </template>
               <template slot="operations" slot-scope="scope">
+                <el-button size="mini" type="text" @click="handleMonitorDevice(scope.row)">
+                  {{ $t('device.viewMessages') }}
+                </el-button>
                 <el-button size="mini" type="text" @click="handleUnbind(scope.row.device_id)">
                   {{ $t('device.unbind') }}
                 </el-button>
@@ -88,6 +91,12 @@
       @refresh="fetchBindDevices(currentAgentId)" />
     <ManualAddDeviceDialog :visible.sync="manualAddDeviceDialogVisible" :agent-id="currentAgentId"
       @refresh="fetchBindDevices(currentAgentId)" />
+    <ChatHistoryDialog
+      :visible.sync="chatHistoryVisible"
+      :agent-id="currentAgentId"
+      :agent-name="selectedDevice ? (selectedDevice.alias || getFirmwareTypeName(selectedDevice.model)) : ''"
+      :mac-address="selectedDevice ? selectedDevice.macAddress : ''"
+    />
     <el-footer>
       <version-footer />
     </el-footer>
@@ -103,6 +112,7 @@ import VersionFooter from "@/components/VersionFooter.vue";
 import MacAddressMask from "@/components/MacAddressMask.vue";
 import CustomButton from "@/components/CustomButton.vue";
 import CustomTable from "@/components/CustomTable.vue";
+import ChatHistoryDialog from "@/components/ChatHistoryDialog.vue";
 import {
   compareTimestamps,
   formatCreateDate,
@@ -121,6 +131,7 @@ export default {
     MacAddressMask,
     CustomButton,
     CustomTable,
+    ChatHistoryDialog,
   },
   data() {
     return {
@@ -138,6 +149,8 @@ export default {
       userApi: null,
       firmwareTypes: [],
       mqttServiceAvailable: false,
+      chatHistoryVisible: false,
+      selectedDevice: null,
     };
   },
   computed: {
@@ -261,6 +274,14 @@ export default {
     },
     handleManualAddDevice() {
       this.manualAddDeviceDialogVisible = true;
+    },
+    handleMonitorDevice(device) {
+      if (!device.macAddress) {
+        this.$message.error(this.$t('device.macAddressRequired'));
+        return;
+      }
+      this.selectedDevice = device;
+      this.chatHistoryVisible = true;
     },
     submitAlias(row) {
       if (row._submitting) return;

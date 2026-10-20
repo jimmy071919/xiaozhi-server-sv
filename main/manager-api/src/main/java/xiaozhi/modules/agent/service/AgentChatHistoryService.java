@@ -35,7 +35,19 @@ public interface AgentChatHistoryService extends IRepository<AgentChatHistoryEnt
      * @param sessionId 会话ID
      * @return 聊天记录列表
      */
-    List<AgentChatHistoryDTO> getChatHistoryBySessionId(String agentId, String sessionId);
+    default List<AgentChatHistoryDTO> getChatHistoryBySessionId(String agentId, String sessionId) {
+        return getChatHistoryBySessionId(agentId, sessionId, null);
+    }
+
+    /**
+     * 根据智能体ID、会话ID和可选设备MAC地址获取聊天记录列表
+     *
+     * @param agentId 智能体ID
+     * @param sessionId 会话ID
+     * @param macAddress 可选设备MAC地址
+     * @return 聊天记录列表
+     */
+    List<AgentChatHistoryDTO> getChatHistoryBySessionId(String agentId, String sessionId, String macAddress);
 
     /**
      * 根据会话ID获取智能体ID

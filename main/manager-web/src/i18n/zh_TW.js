@@ -518,6 +518,8 @@ export default {
   'device.deviceStatus': '狀態',
   'device.online': '線上',
   'device.offline': '離線',
+  'device.viewMessages': '查看對話',
+  'device.macAddressRequired': '缺少設備 MAC 位址，無法載入單台設備的對話。',
 
   // 消息提示
   'message.success': '操作成功',
@@ -533,6 +535,7 @@ export default {
   'chatHistory.dialogTitle': '的聊天記錄',
   'chatHistory.loading': '載入中...',
   'chatHistory.noMoreRecords': '沒有更多記錄了',
+  'chatHistory.noMessagesForDevice': '目前沒有這台設備的聊天記錄；請確認角色設定已啟用聊天記錄上報。',
   'chatHistory.selectSession': '請選擇會話檢視聊天記錄',
   'chatHistory.today': '今天',
   'chatHistory.yesterday': '昨天',
