@@ -1,0 +1,8 @@
+FROM ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server@sha256:98546170645f8119814f1e9b50cd00dec92fb0ff169e4b3bd04ac14482412869
+
+RUN python -m pip install --no-cache-dir --disable-pip-version-check pip==26.2.2 setuptools==84.1.0
+RUN python -m pip install --no-cache-dir --disable-pip-version-check --extra-index-url https://download.pytorch.org/whl/cpu torch==2.11.0+cpu torchaudio==2.11.0+cpu
+
+COPY main/xiaozhi-server/requirements.txt /tmp/requirements.txt
+RUN python -m pip install --no-cache-dir --disable-pip-version-check --index-url https://pypi.org/simple -r /tmp/requirements.txt \
+    && python -m pip check

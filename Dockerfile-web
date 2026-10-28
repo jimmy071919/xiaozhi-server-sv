@@ -1,5 +1,5 @@
 # 第一阶段：构建Vue前端
-FROM node:18 AS web-builder
+FROM node:24.22.1-bookworm AS web-builder
 WORKDIR /app
 COPY main/manager-web/package*.json ./
 RUN npm install
