@@ -14,6 +14,10 @@ const functionDialogSource = await readFile(
   new URL('../src/components/FunctionDialog.vue', import.meta.url),
   'utf8',
 );
+const chatHistoryDialogSource = await readFile(
+  new URL('../src/components/ChatHistoryDialog.vue', import.meta.url),
+  'utf8',
+);
 
 test('address-book permission state consistently uses the target device MAC', () => {
   assert.match(
@@ -77,4 +81,18 @@ test('function dialog footer stays above the expanding MCP tools section', () =>
   assert.ok(mcpLayer, 'MCP section should define its stacking layer');
   assert.ok(footerLayer, 'drawer footer should define its stacking layer');
   assert.ok(Number(footerLayer[1]) > Number(mcpLayer[1]));
+});
+
+test('device monitoring refresh stays scoped to one device and only polls saved reports', () => {
+  assert.match(chatHistoryDialogSource, /setInterval\(this\.refreshMonitor, 5000\)/);
+  assert.match(
+    chatHistoryDialogSource,
+    /getAgentSessions\(agentId, \{ page: 1, limit: this\.limit, macAddress \}/,
+  );
+  assert.match(
+    chatHistoryDialogSource,
+    /getAgentChatHistory\(agentId, sessionId,[\s\S]*?\}, macAddress\)/,
+  );
+  assert.match(chatHistoryDialogSource, /this\.refreshRunId \+= 1;/);
+  assert.match(chatHistoryDialogSource, /chatHistory\.monitorNote/);
 });

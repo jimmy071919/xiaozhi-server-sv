@@ -15,6 +15,15 @@
                 </template>
             </span>
         </template>
+        <div class="monitor-toolbar">
+            <span class="monitor-note">{{ $t('chatHistory.monitorNote') }}</span>
+            <div class="monitor-actions">
+                <el-switch v-model="autoRefresh" :active-text="$t('chatHistory.autoRefresh')" />
+                <el-button size="mini" icon="el-icon-refresh" :loading="isRefreshing" @click="refreshMonitor">
+                    {{ $t('chatHistory.refresh') }}
+                </el-button>
+            </div>
+        </div>
         <div class="chat-container">
             <div class="session-list" @scroll="handleScroll">
                 <div v-for="session in sessions" :key="session.sessionId" class="session-item"
@@ -31,7 +40,7 @@
                 </div>
                 <div v-else-if="!hasMore" class="no-more">{{ $t('chatHistory.noMoreRecords') }}</div>
             </div>
-            <div class="chat-content">
+            <div ref="chatContent" class="chat-content">
                 <div v-if="currentSessionId" class="messages">
                     <div v-for="(message, index) in messagesWithTime" :key="message.id">
                         <div v-if="message.type === 'time'" class="time-divider">
@@ -130,7 +139,12 @@ export default {
             isFirstLoad: true,
             playingAudioId: null,
             audioElement: null,
-            expandedToolResults: {} // 跟踪工具结果的展开状态
+            expandedToolResults: {}, // 跟踪工具结果的展开状态
+            autoRefresh: true,
+            refreshTimer: null,
+            refreshTimeout: null,
+            isRefreshing: false,
+            refreshRunId: 0,
         };
     },
     components: {
@@ -143,10 +157,21 @@ export default {
             if (val) {
                 this.resetData();
                 this.loadSessions();
+                this.startAutoRefresh();
             } else {
+                this.stopAutoRefresh();
+                this.refreshRunId += 1;
+                this.finishRefresh();
                 this.audioElement?.pause();
                 this.audioElement = null;
                 this.playingAudioId = null;
+            }
+        },
+        autoRefresh(enabled) {
+            if (enabled) {
+                this.startAutoRefresh();
+            } else {
+                this.stopAutoRefresh();
             }
         },
         dialogVisible(val) {
@@ -154,6 +179,13 @@ export default {
                 this.$emit('update:visible', false);
             }
         }
+    },
+    beforeDestroy() {
+        this.stopAutoRefresh();
+        this.refreshRunId += 1;
+        this.finishRefresh();
+        if (this.scrollTimer) clearTimeout(this.scrollTimer);
+        this.audioElement?.pause();
     },
     computed: {
         messagesWithTime() {
@@ -246,6 +278,8 @@ export default {
             return firstLine.length < text.length ? firstLine + '...' : text;
         },
         resetData() {
+            this.refreshRunId += 1;
+            this.finishRefresh();
             this.sessions = [];
             this.messages = [];
             this.currentSessionId = '';
@@ -255,6 +289,92 @@ export default {
             this.hasMore = true;
             this.isFirstLoad = true;
             this.expandedToolResults = {};
+        },
+        startAutoRefresh() {
+            this.stopAutoRefresh();
+            if (!this.autoRefresh || !this.dialogVisible) return;
+            this.refreshTimer = setInterval(this.refreshMonitor, 5000);
+        },
+        stopAutoRefresh() {
+            if (this.refreshTimer) {
+                clearInterval(this.refreshTimer);
+                this.refreshTimer = null;
+            }
+        },
+        finishRefresh(runId) {
+            if (runId !== undefined && runId !== this.refreshRunId) return;
+            if (this.refreshTimeout) {
+                clearTimeout(this.refreshTimeout);
+                this.refreshTimeout = null;
+            }
+            this.isRefreshing = false;
+        },
+        refreshMonitor() {
+            if (!this.dialogVisible || this.loading || this.isRefreshing || !this.macAddress) return;
+
+            const agentId = this.agentId;
+            const macAddress = this.macAddress;
+            const sessionId = this.currentSessionId;
+            const content = this.$refs.chatContent;
+            const followLatest = content && content.scrollHeight - content.scrollTop - content.clientHeight < 80;
+            const runId = ++this.refreshRunId;
+            let pending = sessionId ? 2 : 1;
+            let settled = false;
+            this.isRefreshing = true;
+            const finishOne = () => {
+                if (settled || runId !== this.refreshRunId) return;
+                pending -= 1;
+                if (pending === 0) {
+                    settled = true;
+                    this.finishRefresh(runId);
+                }
+            };
+            this.refreshTimeout = setTimeout(() => {
+                if (runId === this.refreshRunId) {
+                    settled = true;
+                    this.finishRefresh(runId);
+                }
+            }, 15000);
+
+            Api.agent.getAgentSessions(agentId, { page: 1, limit: this.limit, macAddress }, (res) => {
+                const list = res && res.data && res.data.data && res.data.data.list;
+                if (!settled && runId === this.refreshRunId && this.dialogVisible &&
+                    this.agentId === agentId && this.macAddress === macAddress && Array.isArray(list)) {
+                    const refreshedIds = new Set(list.map(item => item.sessionId));
+                    const olderSessions = this.sessions.filter(item => !refreshedIds.has(item.sessionId));
+                    this.sessions = [...list, ...olderSessions];
+                    this.hasMore = list.length === this.limit;
+                    if (!this.currentSessionId && this.sessions.length) {
+                        this.selectSession(this.sessions[0]);
+                    }
+                }
+                finishOne();
+            });
+
+            if (sessionId) {
+                Api.agent.getAgentChatHistory(agentId, sessionId, (res) => {
+                    const history = res && res.data && res.data.data;
+                    if (!settled && runId === this.refreshRunId && this.dialogVisible &&
+                        this.agentId === agentId && this.macAddress === macAddress &&
+                        this.currentSessionId === sessionId && Array.isArray(history)) {
+                        this.messages = history;
+                        this.updateSessionChatCount(sessionId, history.length);
+                        if (followLatest) {
+                            this.$nextTick(() => {
+                                if (this.$refs.chatContent) {
+                                    this.$refs.chatContent.scrollTop = this.$refs.chatContent.scrollHeight;
+                                }
+                            });
+                        }
+                    }
+                    finishOne();
+                }, macAddress);
+            }
+        },
+        updateSessionChatCount(sessionId, chatCount) {
+            this.sessions = this.sessions.map(item => item.sessionId === sessionId
+                ? { ...item, chatCount }
+                : item);
         },
         loadSessions() {
             if (this.loading || (!this.isFirstLoad && !this.hasMore)) {
@@ -274,8 +394,8 @@ export default {
                 if (res.data && res.data.data && Array.isArray(res.data.data.list)) {
                     const list = res.data.data.list;
                     this.hasMore = list.length === this.limit;
-
-                    this.sessions = [...this.sessions, ...list];
+                    const existingIds = new Set(this.sessions.map(item => item.sessionId));
+                    this.sessions = [...this.sessions, ...list.filter(item => !existingIds.has(item.sessionId))];
                     this.page++;
 
                     if (this.sessions.length > 0 && !this.currentSessionId) {
@@ -288,19 +408,16 @@ export default {
         },
         selectSession(session) {
             this.currentSessionId = session.sessionId;
-            Api.agent.getAgentChatHistory(this.agentId, session.sessionId, (res) => {
+            const sessionId = session.sessionId;
+            Api.agent.getAgentChatHistory(this.agentId, sessionId, (res) => {
+                if (this.currentSessionId !== sessionId) return;
                 if (res.data && res.data.data) {
                     this.messages = res.data.data;
                     if (this.messages.length > 0 && this.messages[0].macAddress) {
                         this.currentMacAddress = this.messages[0].macAddress;
                     }
                     // 更新会话列表中的聊天记录数量
-                    this.sessions = this.sessions.map(item => {
-                        if (item.sessionId === session.sessionId) {
-                            item.chatCount = this.messages.length;
-                        }
-                        return item;
-                    })
+                    this.updateSessionChatCount(sessionId, this.messages.length);
                 }
             }, this.macAddress);
         },
@@ -409,6 +526,28 @@ export default {
 </script>
 
 <style scoped>
+.monitor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.monitor-note {
+    color: #606266;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.monitor-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
 .chat-container {
     display: flex;
     flex: 1;
@@ -625,6 +764,18 @@ export default {
 
 .download-buttons .el-button {
     flex: 1;
+}
+
+@media (max-width: 760px) {
+    .monitor-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .monitor-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 </style>
 

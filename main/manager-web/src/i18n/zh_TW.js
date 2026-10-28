@@ -542,6 +542,9 @@ export default {
   'chatHistory.downloadCurrentSession': '下載本會話聊天記錄',
   'chatHistory.downloadCurrentWithPreviousSessions': '下載本會話及前20條會話聊天記錄',
   'chatHistory.downloadLinkFailed': '取得下載連結失敗',
+  'chatHistory.monitorNote': '顯示已上報的對話記錄；每 5 秒更新一次，並非即時串流。需在角色設定中開啟聊天記錄上報。',
+  'chatHistory.autoRefresh': '自動更新（5 秒）',
+  'chatHistory.refresh': '立即更新',
 
   'cache.status': '快取狀態',
   'cache.cdnEnabled': 'CDN模式已啟用',

@@ -542,6 +542,9 @@ export default {
   'chatHistory.downloadCurrentSession': '下载本会话聊天记录',
   'chatHistory.downloadCurrentWithPreviousSessions': '下载本会话及前20条会话聊天记录',
   'chatHistory.downloadLinkFailed': '获取下载链接失败',
+  'chatHistory.monitorNote': '显示已上报的对话记录；每 5 秒更新一次，并非实时串流。需在角色设置中开启聊天记录上报。',
+  'chatHistory.autoRefresh': '自动更新（5 秒）',
+  'chatHistory.refresh': '立即更新',
 
   'cache.status': '缓存状态',
   'cache.cdnEnabled': 'CDN模式已启用',

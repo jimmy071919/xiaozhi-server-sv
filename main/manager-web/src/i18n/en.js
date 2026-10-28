@@ -542,6 +542,9 @@ export default {
   'chatHistory.downloadCurrentSession': 'Download current session chat history',
   'chatHistory.downloadCurrentWithPreviousSessions': 'Download current and previous 20 sessions chat history',
   'chatHistory.downloadLinkFailed': 'Failed to get download link',
+  'chatHistory.monitorNote': 'Shows reported chat records; refreshes every 5 seconds, not a live stream. Enable chat-history reporting in the agent settings.',
+  'chatHistory.autoRefresh': 'Auto-refresh (5 sec)',
+  'chatHistory.refresh': 'Refresh now',
 
   'cache.status': 'Cache Status',
   'cache.cdnEnabled': 'CDN Mode Enabled',

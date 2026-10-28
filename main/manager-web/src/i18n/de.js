@@ -542,6 +542,9 @@ export default {
   'chatHistory.downloadCurrentSession': 'Aktuelle Sitzung Chat-Verlauf herunterladen',
   'chatHistory.downloadCurrentWithPreviousSessions': 'Aktuelle und vorherige 20 Sitzungen Chat-Verlauf herunterladen',
   'chatHistory.downloadLinkFailed': 'Download-Link konnte nicht abgerufen werden',
+  'chatHistory.monitorNote': 'Zeigt gemeldete Chatverläufe an; Aktualisierung alle 5 Sekunden, kein Live-Stream. Aktivieren Sie die Chat-Aufzeichnung in den Agent-Einstellungen.',
+  'chatHistory.autoRefresh': 'Automatisch aktualisieren (5 Sek.)',
+  'chatHistory.refresh': 'Jetzt aktualisieren',
 
   'cache.status': 'Cache-Status',
   'cache.cdnEnabled': 'CDN-Modus aktiviert',

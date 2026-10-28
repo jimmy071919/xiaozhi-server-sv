@@ -542,6 +542,9 @@ export default {
   'chatHistory.downloadCurrentSession': 'Tải xuống lịch sử trò chuyện phiên hiện tại',
   'chatHistory.downloadCurrentWithPreviousSessions': 'Tải xuống lịch sử trò chuyện phiên hiện tại và 20 phiên trước',
   'chatHistory.downloadLinkFailed': 'Không thể lấy liên kết tải xuống',
+  'chatHistory.monitorNote': 'Hiển thị lịch sử trò chuyện đã báo cáo; cập nhật mỗi 5 giây, không phải luồng trực tiếp. Bật báo cáo lịch sử trong cài đặt tác nhân.',
+  'chatHistory.autoRefresh': 'Tự động cập nhật (5 giây)',
+  'chatHistory.refresh': 'Cập nhật ngay',
 
   'cache.status': 'Trạng thái cache',
   'cache.cdnEnabled': 'Đã bật chế độ CDN',
